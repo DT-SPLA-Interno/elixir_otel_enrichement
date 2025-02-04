@@ -1,0 +1,67 @@
+# 1. Crear la Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: elixirpoc
+
+---
+# 2. Crear el Secret dentro de la Namespace
+apiVersion: v1
+kind: Secret
+metadata:
+  name: otel-secrets
+  namespace: elixirpoc
+type: Opaque
+data:
+  OTEL_EXPORTER_OTLP_ENDPOINT: aHR0cHM6Ly95YWo2MzAzLnNwcmludC5keW5hdHJhY2VsYWJzLmNvbS9hcGkvdjIvb3RscC92MS90cmFjZXM=
+  OTEL_EXPORTER_OTLP_TOKEN: ZHQwYzAxLktJMzZGTklYVTVOVkFNN0ZBVE5IUlBTNy5IRkRJVFZPNFRSWDdQSlRZNFMyTDUyTEI3VFFBT1ZZQkhacVIzREZWT1lXTzNaQkIzRE1OV1NXVllSWkZRV1NR
+
+---
+# 3. Crear el Deployment que usa el Secret
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hola-mundo-deployment
+  namespace: elixirpoc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hola-mundo
+  template:
+    metadata:
+      labels:
+        app: hola-mundo
+    spec:
+      containers:
+      - name: hola-mundo
+        image: edunzz/elixir_otel:custom_exporter
+        ports:
+        - containerPort: 4000
+        env:
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: otel-secrets
+              key: OTEL_EXPORTER_OTLP_ENDPOINT
+        - name: OTEL_EXPORTER_OTLP_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: otel-secrets
+              key: OTEL_EXPORTER_OTLP_TOKEN
+
+---
+# 4. Crear el Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hola-mundo-service
+  namespace: elixirpoc
+spec:
+  selector:
+    app: hola-mundo
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80           # Puerto público expuesto
+      targetPort: 4000   # Puerto interno de la app
