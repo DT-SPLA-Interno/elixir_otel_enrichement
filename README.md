@@ -69,26 +69,26 @@ docker push edunzz/elixir_otel:custom_exporter
 El siguiente archivo `deployment.yaml` define la creación de la namespace, el secreto, el despliegue y el servicio:
 
 ```yaml
-# Crear la Namespace
+# 1️⃣ Crear la Namespace
 apiVersion: v1
 kind: Namespace
 metadata:
   name: elixirpoc
 
 ---
-# Crear el Secret para credenciales de Dynatrace
+# 2️⃣ Crear el Secret dentro de la Namespace
 apiVersion: v1
 kind: Secret
 metadata:
   name: otel-secrets
   namespace: elixirpoc
 type: Opaque
-data:
-  OTEL_EXPORTER_OTLP_ENDPOINT: xxxurlbase64xxxxxxxxxxxxxx
-  OTEL_EXPORTER_OTLP_TOKEN: xxxxxxxxxxxxxxxxxxbase64xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+stringData:  # Usa stringData para evitar problemas con Base64
+  OTEL_EXPORTER_OTLP_ENDPOINT: "https://{Tenant dynatrace}/api/v2/otlp/v1/traces"
+  OTEL_EXPORTER_OTLP_TOKEN: "TOKEN con scope de openTelemetryTrace.ingest"
 
 ---
-# Crear el Deployment
+# 3️⃣ Crear el Deployment con imagePullPolicy: Always
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -107,6 +107,7 @@ spec:
       containers:
       - name: hola-mundo
         image: edunzz/elixir_otel:custom_exporter
+        imagePullPolicy: Always  # 🔹 Fuerza a Kubernetes a descargar siempre la última imagen
         ports:
         - containerPort: 4000
         env:
@@ -120,6 +121,22 @@ spec:
             secretKeyRef:
               name: otel-secrets
               key: OTEL_EXPORTER_OTLP_TOKEN
+
+---
+# 4️⃣ Crear el Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hola-mundo-service
+  namespace: elixirpoc
+spec:
+  selector:
+    app: hola-mundo
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80           # Puerto público expuesto
+      targetPort: 4000   # Puerto interno de la app
 
 ---
 # Crear el Service para exponer la aplicación
