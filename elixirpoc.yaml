@@ -1,23 +1,23 @@
-# 1. Crear la Namespace
+# 1️⃣ Crear la Namespace
 apiVersion: v1
 kind: Namespace
 metadata:
   name: elixirpoc
 
 ---
-# 2. Crear el Secret dentro de la Namespace
+# 2️⃣ Crear el Secret dentro de la Namespace
 apiVersion: v1
 kind: Secret
 metadata:
   name: otel-secrets
   namespace: elixirpoc
 type: Opaque
-data:
-  OTEL_EXPORTER_OTLP_ENDPOINT: aHR0cHM6Ly95YWo2MzAzLnNwcmludC5keW5hdHJhY2VsYWJzLmNvbS9hcGkvdjIvb3RscC92MS90cmFjZXM=
-  OTEL_EXPORTER_OTLP_TOKEN: ZHQwYzAxLktJMzZGTklYVTVOVkFNN0ZBVE5IUlBTNy5IRkRJVFZPNFRSWDdQSlRZNFMyTDUyTEI3VFFBT1ZZQkhacVIzREZWT1lXTzNaQkIzRE1OV1NXVllSWkZRV1NR
+stringData:  # Usa stringData para evitar problemas con Base64
+  OTEL_EXPORTER_OTLP_ENDPOINT: "https://xxxxxxxxxx/api/v2/otlp/v1/traces"
+  OTEL_EXPORTER_OTLP_TOKEN: "Token"
 
 ---
-# 3. Crear el Deployment que usa el Secret
+# 3️⃣ Crear el Deployment con imagePullPolicy: Always
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -36,6 +36,7 @@ spec:
       containers:
       - name: hola-mundo
         image: edunzz/elixir_otel:custom_exporter
+        imagePullPolicy: Always  # 🔹 Fuerza a Kubernetes a descargar siempre la última imagen
         ports:
         - containerPort: 4000
         env:
@@ -51,7 +52,7 @@ spec:
               key: OTEL_EXPORTER_OTLP_TOKEN
 
 ---
-# 4. Crear el Service
+# 4️⃣ Crear el Service
 apiVersion: v1
 kind: Service
 metadata:
