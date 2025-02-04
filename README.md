@@ -84,8 +84,8 @@ metadata:
   namespace: elixirpoc
 type: Opaque
 data:
-  OTEL_EXPORTER_OTLP_ENDPOINT: aHR0cHM6Ly95YWo2MzAzLnNwcmludC5keW5hdHJhY2VsYWJzLmNvbS9hcGkvdjIvb3RscC92MS90cmFjZXM=
-  OTEL_EXPORTER_OTLP_TOKEN: ZHQwYzAxLktJMzZGTklYVTVOVkFNN0ZBVE5IUlBTNy5IRkRJVFZPNFRSWDdQSlRZNFMyTDUyTEI3VFFBT1ZZQkhacVIzREZWT1lXTzNaQkIzRE1OV1NXVllSWkZRV1NR
+  OTEL_EXPORTER_OTLP_ENDPOINT: xxxurlbase64xxxxxxxxxxxxxx
+  OTEL_EXPORTER_OTLP_TOKEN: xxxxxxxxxxxxxxxxxxbase64xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ---
 # Crear el Deployment
