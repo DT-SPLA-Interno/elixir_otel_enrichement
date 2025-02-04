@@ -27,7 +27,7 @@ docker images | grep elixir_otel
 Para ejecutar la imagen y probarla en local, asegúrate de pasar las variables de entorno necesarias:
 
 ```sh
-docker run -e OTEL_EXPORTER_OTLP_ENDPOINT="https://yaj06303.sprint.dynatracelabs.com/api/v2/otlp/v1/traces" \
+docker run -e OTEL_EXPORTER_OTLP_ENDPOINT="https://xxxxxxxx/api/v2/otlp/v1/traces" \
            -e OTEL_EXPORTER_OTLP_TOKEN="tu_token" \
            -p 4000:4000 elixir_otel:custom_exporter
 ```
