@@ -59,7 +59,7 @@ Introduce tus credenciales de Docker Hub cuando lo solicite.
 ```sh
 docker push edunzz/elixir_otel:custom_exporter
 ```
-
+[https://hub.docker.com/repository/docker/edunzz/elixir_otel/tags](https://hub.docker.com/repository/docker/edunzz/elixir_otel/tags)
 ---
 
 ## ☸️ Despliegue en Kubernetes
