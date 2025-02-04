@@ -64,7 +64,7 @@ docker push edunzz/elixir_otel:custom_exporter
 
 ## ☸️ Despliegue en Kubernetes
 
-### **1. Aplicar el YAML de Kubernetes**
+### **1. Aplicar el YAML de Kubernetes (Modificar URL y token)**
 
 El siguiente archivo `deployment.yaml` define la creación de la namespace, el secreto, el despliegue y el servicio:
 
