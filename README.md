@@ -153,6 +153,11 @@ kubectl get pods -n elixirpoc
 kubectl get svc -n elixirpoc
 ```
 
+### **4. Verificar el api**
+```sh
+curl -i http://{IP external of kubernetes svc}/
+```
+
 ---
 
 ## 🛠️ ¿Qué Hace el Código?
