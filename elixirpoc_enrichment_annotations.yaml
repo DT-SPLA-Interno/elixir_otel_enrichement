@@ -44,6 +44,8 @@ spec:
         ports:
         - containerPort: 4000
         env:
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "dt.security_context=sre,dt.cost.costcenter=it_services,dt.cost.product=fin_app"
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           valueFrom:
             secretKeyRef:
