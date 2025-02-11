@@ -1,6 +1,6 @@
 # 1️⃣ Crear la Namespace
 apiVersion: v1
-kind: Namespacea
+kind: Namespace
 metadata:
   name: elixirpoc-noenrichment
 
