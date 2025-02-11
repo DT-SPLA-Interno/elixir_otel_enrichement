@@ -1,6 +1,6 @@
 # 1️⃣ Crear la Namespace
 apiVersion: v1
-kind: Namespace
+kind: Namespacea
 metadata:
   name: elixirpoc-noenrichment
 
@@ -32,6 +32,10 @@ spec:
     metadata:
       labels:
         app: hola-mundo-noenrichment
+      annotations:  # 🔹 Agregar las anotaciones de Dynatrace para enrichment
+        metadata.dynatrace.com/dt.security_context: sre
+        metadata.dynatrace.com/dt.cost.costcenter: it_services
+        metadata.dynatrace.com/dt.cost.product: fin_app
     spec:
       containers:
       - name: hola-mundo-noenrichment
