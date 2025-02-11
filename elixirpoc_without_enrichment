@@ -1,0 +1,45 @@
+# 1️⃣ Crear la nueva Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: elixirpoc-noenrichment
+
+---
+# 2️⃣ Crear el nuevo Deployment con una nueva imagen y nombre
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hola-mundo-noenrichment-deployment
+  namespace: elixirpoc-noenrichment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hola-mundo-noenrichment
+  template:
+    metadata:
+      labels:
+        app: hola-mundo-noenrichment
+    spec:
+      containers:
+      - name: hola-mundo-noenrichment
+        image: edunzz/hola_mundo:yaj06303
+        imagePullPolicy: Always  # 🔹 Asegura que Kubernetes siempre descargue la última versión
+        ports:
+        - containerPort: 4000
+
+---
+# 3️⃣ Crear el nuevo Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: hola-mundo-noenrichment-service
+  namespace: elixirpoc-noenrichment
+spec:
+  selector:
+    app: hola-mundo-noenrichment
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80           # Puerto público expuesto
+      targetPort: 4000   # Puerto interno de la app
