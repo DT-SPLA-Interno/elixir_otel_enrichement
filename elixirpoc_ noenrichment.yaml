@@ -1,15 +1,27 @@
-# 1️⃣ Crear la nueva Namespace
+# 1️⃣ Crear la Namespace
 apiVersion: v1
 kind: Namespace
 metadata:
   name: elixirpoc-noenrichment
 
 ---
-# 2️⃣ Crear el nuevo Deployment con una nueva imagen y nombre
+# 2️⃣ Crear el Secret dentro de la Namespace
+apiVersion: v1
+kind: Secret
+metadata:
+  name: otel-secrets-noenrichment
+  namespace: elixirpoc-noenrichment
+type: Opaque
+stringData:  # Usa stringData para evitar problemas con Base64
+  OTEL_EXPORTER_OTLP_ENDPOINT: "https://xxxxxxxxxx/api/v2/otlp/v1/traces"
+  OTEL_EXPORTER_OTLP_TOKEN: "Token"
+
+---
+# 3️⃣ Crear el Deployment con imagePullPolicy: Always
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hola-mundo-noenrichment-deployment
+  name: hola-mundo-deployment-noenrichment
   namespace: elixirpoc-noenrichment
 spec:
   replicas: 1
@@ -23,17 +35,28 @@ spec:
     spec:
       containers:
       - name: hola-mundo-noenrichment
-        image: edunzz/hola_mundo:yaj06303
-        imagePullPolicy: Always  # 🔹 Asegura que Kubernetes siempre descargue la última versión
+        image: edunzz/elixir_otel:noenrichment
+        imagePullPolicy: Always  # 🔹 Fuerza a Kubernetes a descargar siempre la última imagen
         ports:
         - containerPort: 4000
+        env:
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: otel-secrets-noenrichment
+              key: OTEL_EXPORTER_OTLP_ENDPOINT
+        - name: OTEL_EXPORTER_OTLP_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: otel-secrets-noenrichment
+              key: OTEL_EXPORTER_OTLP_TOKEN
 
 ---
-# 3️⃣ Crear el nuevo Service
+# 4️⃣ Crear el Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: hola-mundo-noenrichment-service
+  name: hola-mundo-service-noenrichment
   namespace: elixirpoc-noenrichment
 spec:
   selector:
