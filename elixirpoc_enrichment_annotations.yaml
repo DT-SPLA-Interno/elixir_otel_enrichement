@@ -13,7 +13,7 @@ metadata:
   namespace: elixirpoc-noenrichment
 type: Opaque
 stringData:  # Usa stringData para evitar problemas con Base64
-  OTEL_EXPORTER_OTLP_ENDPOINT: "https://xxxxxxxxxx/api/v2/otlp/v1/traces"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "https://xxxxxxxxxxxx.com/api/v2/otlp/v1/traces"
   OTEL_EXPORTER_OTLP_TOKEN: "Token"
 
 ---
@@ -32,10 +32,10 @@ spec:
     metadata:
       labels:
         app: hola-mundo-noenrichment
-      annotations:  # 🔹 Agregar las anotaciones de Dynatrace para enrichment
-        metadata.dynatrace.com/dt.security_context: sre
-        metadata.dynatrace.com/dt.cost.costcenter: it_services
-        metadata.dynatrace.com/dt.cost.product: fin_app
+      annotations:
+        metadata.dynatrace.com/dt.security_context: "sre"
+        metadata.dynatrace.com/dt.cost.costcenter: "it_services"
+        metadata.dynatrace.com/dt.cost.product: "fin_app"
     spec:
       containers:
       - name: hola-mundo-noenrichment
