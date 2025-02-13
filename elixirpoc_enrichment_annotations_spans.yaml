@@ -2,15 +2,15 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: elixirpoc-noenrichment
+  name: elixirpoc-annotations
 
 ---
 # 2️⃣ Crear el Secret dentro de la Namespace
 apiVersion: v1
 kind: Secret
 metadata:
-  name: otel-secrets-noenrichment
-  namespace: elixirpoc-noenrichment
+  name: otel-secrets-annotations
+  namespace: elixirpoc-annotations
 type: Opaque
 stringData:  # Usa stringData para evitar problemas con Base64
   OTEL_EXPORTER_OTLP_ENDPOINT: "https://xxxxxxxxxxx.com/api/v2/otlp/v1/traces"
@@ -21,25 +21,25 @@ stringData:  # Usa stringData para evitar problemas con Base64
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hola-mundo-deployment-noenrichment
-  namespace: elixirpoc-noenrichment
+  name: hola-mundo-deployment-annotations
+  namespace: elixirpoc-annotations
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hola-mundo-noenrichment
+      app: hola-mundo-annotations
   template:
     metadata:
       labels:
-        app: hola-mundo-noenrichment
+        app: hola-mundo-annotations
       annotations:
         metadata.dynatrace.com/dt.security_context: "sre"
         metadata.dynatrace.com/dt.cost.costcenter: "it_services"
         metadata.dynatrace.com/dt.cost.product: "fin_app"
     spec:
       containers:
-      - name: hola-mundo-noenrichment
-        image: edunzz/elixir_otel:noenrichment
+      - name: hola-mundo-annotations
+        image: edunzz/elixir_otel:annotations
         imagePullPolicy: Always  # 🔹 Fuerza a Kubernetes a descargar siempre la última imagen
         ports:
         - containerPort: 4000
@@ -49,12 +49,12 @@ spec:
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
           valueFrom:
             secretKeyRef:
-              name: otel-secrets-noenrichment
+              name: otel-secrets-annotations
               key: OTEL_EXPORTER_OTLP_ENDPOINT
         - name: OTEL_EXPORTER_OTLP_TOKEN
           valueFrom:
             secretKeyRef:
-              name: otel-secrets-noenrichment
+              name: otel-secrets-annotations
               key: OTEL_EXPORTER_OTLP_TOKEN
 
 ---
@@ -62,11 +62,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hola-mundo-service-noenrichment
-  namespace: elixirpoc-noenrichment
+  name: hola-mundo-service-annotations
+  namespace: elixirpoc-annotations
 spec:
   selector:
-    app: hola-mundo-noenrichment
+    app: hola-mundo-annotations
   type: LoadBalancer
   ports:
     - name: http
